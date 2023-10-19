@@ -26,8 +26,17 @@ contract Task2 with Deployable {
   }
   
   receive(msg: Refund) {
+      nativeThrowUnless(23, self.admin == sender());
+      send(SendParameters{to: msg.sender, value: 0, mode: SendRemainingBalance});
   }
 
   receive(msg: Slice) {
+    let body: Cell = beginCell().storeAddress(sender()).storeRef(beginCell().storeSlice(msg).asCell()).asCell()
+    send(SendParameters{
+            to: self.admin,
+            value: 0,
+            mode: SendRemainingBalance,
+            body:  Cell
+     });
   }
 }
